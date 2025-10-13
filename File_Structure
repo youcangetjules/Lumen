@@ -1,0 +1,9 @@
+data-center-inventory-extractor/
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── app.py
+├── setup.py
+├── LICENSE
+└── assets/
+    └── screenshot.png (optional)
