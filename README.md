@@ -137,53 +137,55 @@ Works without GPU but 5-10x slower:
 ## 🚀 Installation
 
 ### 1. Clone the Repository
-
+```bash
 git clone https://github.com/youcangetjules/Lumen.git
-cd data-center-inventory-extractor
 
-2. Create Virtual Environment
-Windows:
+cd data-center-inventory-extractor
+```
+
+### 2. Create Virtual Environment
+#### Windows:
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-Linux/macOS:
+#### Linux/macOS:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-3. Install PyTorch
+### 3. Install PyTorch
    
-For GPU (CUDA 11.8)
+#### For GPU (CUDA 11.8)
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ```
 
-For GPU (CUDA 12.1):
+#### For GPU (CUDA 12.1):
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 ```
 
-For CPU-only:
+#### For CPU-only:
 
 ```bash
 pip install torch torchvision
 ```
 
-4. Install Dependencies
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-6. (Optional) Install Tesseract OCR
+### 5. (Optional) Install Tesseract OCR
 
-Windows:
+#### Windows:
 
 Download from: 
 ```bash
@@ -193,36 +195,37 @@ https://github.com/UB-Mannheim/tesseract/wiki
 Run installer (use default path: C:\Program Files\Tesseract-OCR)
 App will auto-detect on startup
 
-Linux:
+#### Linux:
 
 ```bash
 sudo apt-get update
 sudo apt-get install tesseract-ocr
 ```
 
-macOS:
+#### macOS:
 
 ```bash
 brew install tesseract
 ```
 
-6. Verify Installation
+### 6. Verify Installation
 
-# Check CUDA availability
+#### Check CUDA availability
 
 ```bash
 python -c "import torch; print(f'CUDA Available: {torch.cuda.is_available()}')"
 ```
 
-# Check GPU info (if available)
+#### Check GPU info (if available)
 ```bash
 python -c "import torch; print(torch.cuda.get_device_name(0)) if torch.cuda.is_available() else print('CPU mode')"
 ```
 
-⚡ Quick Start
+# ⚡ Quick Start
 
 Basic Usage
-# Run the application
+
+### Run the application
 
 
 ```bash
@@ -231,7 +234,8 @@ streamlit run app.py
 
 The app will open in your browser at http://localhost:8501
 
-First-Time Setup
+#### First-Time Setup
+
 Upload a PDF - Click "Browse files" and select your rack diagram
 
 Choose Quality - Select DPI (300 DPI recommended) << Go higher if needs be, but with an RTX 3080 - this becomes SLOW.
