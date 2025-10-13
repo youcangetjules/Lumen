@@ -99,8 +99,6 @@ Equipment: MISC CAB
 Contains: (3) 3A SMSI TRANS
 ...
 
-gherkin
-
 
 ---
 
@@ -140,395 +138,589 @@ Works without GPU but 5-10x slower:
 
 ### 1. Clone the Repository
 
-```bash
 git clone https://github.com/yourusername/data-center-inventory-extractor.git
 cd data-center-inventory-extractor
+
 2. Create Virtual Environment
 Windows:
 
-bash
-
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
+
 Linux/macOS:
-
-bash
-
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
+
 3. Install PyTorch
-For GPU (CUDA 11.8):
+   
+For GPU (CUDA 11.8)
 
-bash
-
+```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
+
 For GPU (CUDA 12.1):
 
-bash
-
+```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+```
+
 For CPU-only:
 
-bash
-
+```bash
 pip install torch torchvision
-4. Install Dependencies
-bash
+```
 
+4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-5. (Optional) Install Tesseract OCR
+```
+
+6. (Optional) Install Tesseract OCR
+
 Windows:
 
-Download from: https://github.com/UB-Mannheim/tesseract/wiki
+Download from: 
+```bash
+https://github.com/UB-Mannheim/tesseract/wiki
+```
+
 Run installer (use default path: C:\Program Files\Tesseract-OCR)
 App will auto-detect on startup
+
 Linux:
 
-bash
-
+```bash
 sudo apt-get update
 sudo apt-get install tesseract-ocr
+```
+
 macOS:
 
-bash
-
+```bash
 brew install tesseract
+```
+
 6. Verify Installation
-bash
 
 # Check CUDA availability
+
+```bash
 python -c "import torch; print(f'CUDA Available: {torch.cuda.is_available()}')"
+```
 
 # Check GPU info (if available)
+```bash
 python -c "import torch; print(torch.cuda.get_device_name(0)) if torch.cuda.is_available() else print('CPU mode')"
-⚡ Quick Start
-Basic Usage
-bash
+```
 
+⚡ Quick Start
+
+Basic Usage
 # Run the application
+
+
+```bash
 streamlit run app.py
+```
+
 The app will open in your browser at http://localhost:8501
 
 First-Time Setup
 Upload a PDF - Click "Browse files" and select your rack diagram
-Choose Quality - Select DPI (300 DPI recommended)
-Select Model - Qwen2-VL-7B recommended for best quality
-Pick Template - Use "Detailed Inventory" for comprehensive extraction
-Analyze - Click "Analyze with AI" (first run downloads model ~15GB)
-Expected Download Times
-Model	Size	Download Time (100 Mbps)
-Qwen2-VL-7B	~15 GB	20-25 minutes
-LLaVA-v1.6	~15 GB	20-25 minutes
-BLIP-2 Flan-T5-XL	~11 GB	15-20 minutes
-PaliGemma-3B	~6 GB	8-10 minutes
-Florence-2-Large	~1.5 GB	2-3 minutes
-Models are cached locally - subsequent loads are instant!
 
-📖 Usage Guide
-1. Upload & Configure
-Supported Formats:
+Choose Quality - Select DPI (300 DPI recommended) << Go higher if needs be, but with an RTX 3080 - this becomes SLOW.
 
-PDF (single or multi-page)
-Recommended: Vector PDFs or high-quality scans
-Quality Settings:
+Select Model - Qwen2-VL-7B recommended for best quality. I am busy working on how to split up text and graphics (topology) into separate chucks - future feature
 
-72 DPI: Fast preview, low quality
-150 DPI: Standard documents
-300 DPI: ⭐ Recommended - best balance
-600 DPI: Tiny text, detailed diagrams
-1200 DPI: Ultra high-res (slow)
-2. Choose Display Mode
-Fit to Width:
+Pick Template - Use "Detailed Inventory" for comprehensive extraction. It accepts free text.
 
-Scales image to browser width
-Fast, convenient
-May appear blurry at high DPI
-Actual Size:
+Analyze - Click "Analyze with AI" (first run downloads model ~15GB) these models are cached on your local machine - all about 10+ GB so if you're limited on space you can delete the chache (and start again...)
 
-Pixel-perfect rendering
-Requires scrolling for large images
-Sharp and clear
-3. Select AI Model
-For Technical Diagrams:
+# 📖 Usage Guide
 
-✅ Qwen2-VL-7B (best OCR accuracy)
-✅ Florence-2 (fastest pure OCR)
-For Complex Analysis:
+## 1. Upload & Configure
 
-✅ LLaVA-v1.6-Mistral (best reasoning)
-✅ Qwen2-VL-7B (detailed descriptions)
-For Limited VRAM (<8GB):
+### Supported Formats
 
-✅ PaliGemma-3B (4-5GB VRAM)
-✅ Florence-2 (2-3GB VRAM)
-4. Craft Your Prompt
-Built-in Templates:
+- PDF (single or multi-page)
+- **Recommended:** Vector PDFs or high-quality scans
 
-Template	Best For	Output Format
-Detailed Inventory	Complete equipment list	Structured list with specs
-Structured Table	Database import	Markdown table
-Technical Diagram	System documentation	Categorized sections
-Quick List	Fast overview	Simple enumeration
-OCR Extract	Raw text extraction	Unstructured text
-Custom Prompts:
+### Quality Settings
 
-sql_more
+| DPI | Description | Recommendation |
+|-----|-------------|----------------|
+| **72** | Fast preview, low quality | Quick checks only |
+| **150** | Standard documents | General documents |
+| **300** ⭐ | Best balance | **Recommended starting point** |
+| **600** | Tiny text, detailed diagrams | **Best for technical diagrams with GPU** |
+| **1200** | Ultra high-res | Archival quality (very slow) |
 
-Example: "List all network equipment with IP addresses and connection details"
-Example: "Create a CSV-compatible inventory with columns: Position, Type, Model, Serial"
-Example: "Identify all power distribution units and their amp ratings"
-5. Analyze & Export
-Processing time: 30-90 seconds (GPU), 3-5 minutes (CPU)
-Results displayed in markdown format
-Download as .txt file
-Copy/paste to documentation
-🤖 AI Models
-Qwen2-VL-7B-Instruct ⭐ Recommended
-Best for: Technical diagrams, equipment lists, detailed OCR
+> **Note:** 600 DPI is probably the best starting point for technical diagrams, but make sure you have a powerful GPU!
 
-Strengths:
+---
 
-Excellent text recognition (labels, model numbers, part codes)
-Understands technical terminology
-Accurate position/rack unit detection
-Good connection mapping
-VRAM: 8-9 GB | Speed: Medium
+## 2. Choose Display Mode
 
-Example Output:
+### Fit to Width
+- Scales image to browser width
+- Fast, convenient
+- May appear blurry at high DPI
 
-apache
+### Actual Size
+- Pixel-perfect rendering
+- Requires scrolling for large images
+- Sharp and clear
+
+---
+
+## 3. Select AI Model
+
+### For Technical Diagrams
+- ✅ **Qwen2-VL-7B** (best OCR accuracy)
+- ✅ **Florence-2** (fastest pure OCR)
+
+### For Complex Analysis
+- ✅ **LLaVA-v1.6-Mistral** (best reasoning)
+- ✅ **Qwen2-VL-7B** (detailed descriptions)
+
+### For Limited VRAM (<8GB)
+- ✅ **PaliGemma-3B** (4-5GB VRAM)
+- ✅ **Florence-2** (2-3GB VRAM)
+
+> **💡 Tip:** If you're running into VRAM issues, ask your boss for a better computer! 🚀
+
+---
+
+## 4. Craft Your Prompt
+
+### Built-in Templates
+
+| Template | Best For | Output Format |
+|----------|----------|---------------|
+| **Detailed Inventory** | Complete equipment list | Structured list with specs |
+| **Structured Table** | Database import | Markdown table |
+| **Technical Diagram** | System documentation | Categorized sections |
+| **Quick List** | Fast overview | Simple enumeration |
+| **OCR Extract** | Raw text extraction | Unstructured text |
+
+### Custom Prompts Examples
+
+```bash
+List all network equipment with IP addresses and connection details
+```
+
+```bash
+Create a CSV-compatible inventory with columns: Position, Type, Model, Serial
+```
+
+```bash
+Identify all power distribution units and their amp ratings
+```
+
+---
+
+## 5. Analyze & Export
+
+- **Processing time:** ~5 minutes on average (GPU at 600 DPI)
+- Results displayed in markdown format
+- Download as `.txt` file
+- Copy/paste to documentation
+
+---
+
+## 🤖 AI Models
+
+> **📌 READ THIS SECTION:** It will save you time depending on the task!
+
+### Qwen2-VL-7B-Instruct ⭐ Recommended
+
+**Best for:** Technical diagrams, equipment lists, detailed OCR
+
+**Strengths:**
+- Excellent text recognition (labels, model numbers, part codes)
+- Understands technical terminology
+- Accurate position/rack unit detection
+- Good connection mapping
+
+**VRAM:** 8-9 GB | **Speed:** Medium
+
+**Example Output:**
 
 RACK LAYOUT (U0 to U42):
 
 U0-U2: DIALAMM01
-- Type: Audio Alarm Panel (AUD ALM PNL)
-- Purpose: Alarm monitoring and notification
 
+Type: Audio Alarm Panel (AUD ALM PNL)
+Purpose: Alarm monitoring and notification
 U3-U5: MISC CAB
-- Equipment 1: Reserve Panel (RES PNL)
-- Equipment 2: MDF 1ST TRK
-- Equipment 3: TBCU (2 units)
-...
-LLaVA-v1.6-Mistral-7B
-Best for: Complex instructions, detailed reasoning
 
-Strengths:
+Equipment 1: Reserve Panel (RES PNL)
+Equipment 2: MDF 1ST TRK
+Equipment 3: TBCU (2 units)
 
-Excellent instruction following
-Natural language understanding
-Detailed explanations
-Good spatial reasoning
-VRAM: 8-9 GB | Speed: Medium
+### LLaVA-v1.6-Mistral-7B
 
-PaliGemma-3B-Mix-448
-Best for: Limited VRAM, balanced performance
+**Best for:** Complex instructions, detailed reasoning
 
-Strengths:
+**Strengths:**
+- Excellent instruction following
+- Natural language understanding
+- Detailed explanations
+- Good spatial reasoning
 
-Memory efficient (4-5GB VRAM)
-Fast inference
-Good general performance
-Lightweight deployment
-VRAM: 4-5 GB | Speed: Fast
+**VRAM:** 8-9 GB | **Speed:** Medium
 
-Florence-2-Large
-Best for: Pure OCR, text extraction, object detection
+### PaliGemma-3B-Mix-448
 
-Strengths:
+**Best for:** Limited VRAM, balanced performance
 
-Extremely fast
-Low memory footprint
-Excellent text recognition
-Built-in OCR tasks
-VRAM: 2-3 GB | Speed: Very Fast
+**Strengths:**
+- Memory efficient (4-5GB VRAM)
+- Fast inference
+- Good general performance
+- Lightweight deployment
 
-BLIP-2 Flan-T5-XL
-Best for: General descriptions, question answering
+**VRAM:** 4-5 GB | **Speed:** Fast
 
-Strengths:
+### Florence-2-Large
 
-Good general understanding
-Natural language generation
-Stable performance
-VRAM: 7-8 GB | Speed: Fast
+**Best for:** Pure OCR, text extraction, object detection
 
-⚙️ Configuration
-DPI Selection Guide
-DPI	Use Case	File Size	Processing Time
-72	Quick preview	Small	Very Fast
-150	Standard documents	Medium	Fast
-300 ⭐	Technical diagrams	Large	Medium
-600	Tiny text (<8pt font)	Very Large	Slow
-1200	Archival quality	Huge	Very Slow
-Color Mode
-RGB (Color):
+**Strengths:**
+- Extremely fast
+- Low memory footprint
+- Excellent text recognition
+- Built-in OCR tasks
 
-Full color preservation
-Better for color-coded diagrams
-Larger file size
-Grayscale:
+**VRAM:** 2-3 GB | **Speed:** Very Fast
 
-Can improve OCR accuracy
-Smaller file size
-Faster processing
-Enhancement Options
-Enhance Contrast:
+### BLIP-2 Flan-T5-XL
 
-✅ Recommended for scanned documents
-Improves text visibility
-May over-enhance clean diagrams
-Sharpen Image:
+**Best for:** General descriptions, question answering
 
-✅ Recommended for soft/blurry images
-Makes text crisper
-May amplify noise
-🔧 Troubleshooting
-Common Issues
-1. CUDA Not Available
-Problem: App shows "CUDA Not Available"
+**Strengths:**
+- Good general understanding
+- Natural language generation
+- Stable performance
 
-Solution:
+**VRAM:** 7-8 GB | **Speed:** Fast
 
-bash
+---
 
-# Check if NVIDIA GPU is detected
+## ⚙️ Configuration
+
+### DPI Selection Guide
+
+| DPI | Use Case | File Size | Processing Time |
+|-----|----------|-----------|-----------------|
+| **72** | Quick preview | Small | Very Fast |
+| **150** | Standard documents | Medium | Fast |
+| **300** ⭐ | Technical diagrams | Large | Medium |
+| **600** | Tiny text (<8pt font) | Very Large | Slow |
+| **1200** | Archival quality | Huge | Very Slow |
+
+### Color Mode
+
+**RGB (Color):**
+- Full color preservation
+- Better for color-coded diagrams
+- Larger file size
+
+**Grayscale:**
+- Can improve OCR accuracy
+- Smaller file size
+- Faster processing
+
+### Enhancement Options
+
+**Enhance Contrast:**
+- ✅ Recommended for scanned documents
+- Improves text visibility
+- May over-enhance clean diagrams
+
+**Sharpen Image:**
+- ✅ Recommended for soft/blurry images
+- Makes text crisper
+- May amplify noise
+
+---
+
+# 🔧 Troubleshooting
+
+## Common Issues
+
+### 1. CUDA Not Available
+
+**Problem:** App shows "CUDA Not Available"
+
+**Solution:**
+
+## Check if NVIDIA GPU is detected
+```bash
 nvidia-smi
+```
 
-# Reinstall PyTorch with CUDA
+## Reinstall PyTorch with CUDA
 pip uninstall torch torchvision
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-2. Out of Memory (VRAM)
+
+##2. Out of Memory (VRAM)
 Problem: Error during model loading or inference
 
-Solutions:
+#### Solutions:
 
 Switch to CPU mode (slower but works)
 Use a smaller model (Florence-2 or PaliGemma)
 Close other GPU applications
 Clear GPU cache (button in sidebar)
 Reduce DPI setting
-3. Out of Memory (RAM)
+
+## 3. Out of Memory (RAM)
 Problem: System freezes or crashes
 
-Solutions:
+#### Solutions:
 
 Close other applications
 Use Florence-2 (smallest model)
 Increase virtual memory/swap space
 Upgrade system RAM
-4. Model Download Fails
+
+## 4. Model Download Fails
 Problem: Download interrupted or corrupted
 
-Solution:
-
-bash
+#### Solution:
 
 # Clear cache and retry
-rm -rf ~/.cache/huggingface/hub/*
 
-# Or use cache manager in app sidebar
-5. Tesseract Not Found
+```bash
+rm -rf ~/.cache/huggingface/hub/*
+```
+
+Or use the cache manager button in the app sidebar.
+
+## 5. Tesseract Not Found
 Problem: OCR mode fails
 
-Windows Solution:
+#### Windows Solution:
 
-Install from: https://github.com/UB-Mannheim/tesseract/wiki
-Use default path: C:\Program Files\Tesseract-OCR
-Linux Solution:
+Download installer from: 
 
-bash
+```bash
+https://github.com/UB-Mannheim/tesseract/wiki
+```
 
+Run the installer (use default path: C:\Program Files\Tesseract-OCR)
+The app will auto-detect on startup
+
+#### Latest Windows Installer:
+
+tesseract-ocr-w64-setup-5.5.0.20241111.exe (64-bit)
+
+#### Linux Solution:
+```bash
+sudo apt-get update
 sudo apt-get install tesseract-ocr
-6. Poor OCR Quality
-Solutions:
+```
+
+#### macOS Solution:
+
+```bash
+brew install tesseract
+```
+
+## 6. Poor OCR Quality
+
+### Solutions:
 
 Increase DPI to 600 or 1200
 Enable "Enhance Contrast" and "Sharpen"
 Use Grayscale mode
 Try Qwen2-VL instead (better than Tesseract)
-🚀 Performance Tips
-For Best Quality
+
+# 🚀 Performance Tips
+
+## For Best Quality
 Use 300-600 DPI for analysis
 Enable enhancements (contrast + sharpen)
 Choose Qwen2-VL or LLaVA for complex diagrams
 Use structured prompts (table format works best)
-For Speed
+
+##For Speed
 Use 150 DPI for quick processing
 Choose Florence-2 (fastest model)
 Disable enhancements (faster rendering)
 Use GPU mode (10x faster than CPU)
-For Limited VRAM
+
+## For Limited VRAM
 Use PaliGemma-3B (4-5GB) or Florence-2 (2-3GB)
 Switch to CPU mode as fallback
 Close other GPU applications
 Process one page at a time
-Batch Processing
+
+## Batch Processing
 For multiple PDFs:
+#### Process all PDFs in a folder (future feature)
+#### Currently: Upload one at a time
 
-python
+## 📊 Model Comparison
 
-Run
+### Performance Matrix
 
-# Process all PDFs in a folder (future feature)
-# Currently: Upload one at a time
-📊 Model Comparison
-Metric	Qwen2-VL	LLaVA-v1.6	PaliGemma	Florence-2	BLIP-2
-Text Accuracy	⭐⭐⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐
-Reasoning	⭐⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐	⭐⭐	⭐⭐⭐
-Speed	⭐⭐⭐	⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐⭐
-Memory Efficient	⭐⭐	⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐
-Detail Level	⭐⭐⭐⭐⭐	⭐⭐⭐⭐⭐	⭐⭐⭐⭐	⭐⭐⭐	⭐⭐⭐
-🤝 Contributing
+| Metric | Qwen2-VL | LLaVA-v1.6 | PaliGemma | Florence-2 | BLIP-2 |
+|--------|----------|------------|-----------|------------|--------|
+| **Text Accuracy** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Reasoning** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐ |
+| **Speed** | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Memory Efficient** | ⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Detail Level** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+
+### Technical Specifications
+
+| Model | VRAM Usage | Model Size | Inference Speed | Best Use Case |
+|-------|-----------|------------|-----------------|---------------|
+| **Qwen2-VL-7B** | 8-9 GB | ~15 GB | Medium | Technical diagrams with OCR |
+| **LLaVA-v1.6** | 8-9 GB | ~15 GB | Medium | Complex reasoning tasks |
+| **PaliGemma-3B** | 4-5 GB | ~6 GB | Fast | Limited VRAM systems |
+| **Florence-2** | 2-3 GB | ~1.5 GB | Very Fast | Pure OCR extraction |
+| **BLIP-2** | 7-8 GB | ~11 GB | Fast | General descriptions |
+
+### Detailed Comparison
+
+#### Text Recognition Accuracy
+- **Best:** Qwen2-VL, Florence-2 (⭐⭐⭐⭐⭐)
+- **Good:** LLaVA-v1.6, PaliGemma (⭐⭐⭐⭐)
+- **Adequate:** BLIP-2 (⭐⭐⭐)
+
+#### Reasoning & Understanding
+- **Best:** Qwen2-VL, LLaVA-v1.6 (⭐⭐⭐⭐⭐)
+- **Good:** PaliGemma, BLIP-2 (⭐⭐⭐)
+- **Basic:** Florence-2 (⭐⭐)
+
+#### Processing Speed
+- **Fastest:** Florence-2 (⭐⭐⭐⭐⭐)
+- **Fast:** PaliGemma, BLIP-2 (⭐⭐⭐⭐)
+- **Medium:** Qwen2-VL, LLaVA-v1.6 (⭐⭐⭐)
+
+#### Memory Efficiency
+- **Most Efficient:** Florence-2 (⭐⭐⭐⭐⭐)
+- **Efficient:** PaliGemma (⭐⭐⭐⭐)
+- **Standard:** BLIP-2 (⭐⭐⭐)
+- **High Usage:** Qwen2-VL, LLaVA-v1.6 (⭐⭐)
+
+### Recommendation Guide
+
+**Choose Qwen2-VL if:**
+- You need the best OCR accuracy for technical diagrams
+- You have 8GB+ VRAM available
+- Processing time is not critical
+- You need detailed equipment specifications
+
+**Choose LLaVA-v1.6 if:**
+- You need complex reasoning and understanding
+- You want detailed natural language descriptions
+- You have 8GB+ VRAM available
+- You need to follow complex instructions
+
+**Choose PaliGemma if:**
+- You have limited VRAM (4-6GB)
+- You need balanced performance
+- Speed is important
+- You want good general-purpose results
+
+**Choose Florence-2 if:**
+- You need pure OCR/text extraction
+- You have very limited VRAM (2-3GB)
+- Speed is the top priority
+- You don't need complex reasoning
+
+**Choose BLIP-2 if:**
+- You need general image descriptions
+- You have moderate VRAM (7-8GB)
+- You want stable, predictable results
+- You need question-answering capabilities
+
+### Download Times (100 Mbps Connection)
+
+| Model | Size | Download Time | Disk Space Required |
+|-------|------|---------------|---------------------|
+| Qwen2-VL-7B | ~15 GB | 20-25 minutes | 15 GB |
+| LLaVA-v1.6 | ~15 GB | 20-25 minutes | 15 GB |
+| BLIP-2 Flan-T5-XL | ~11 GB | 15-20 minutes | 11 GB |
+| PaliGemma-3B | ~6 GB | 8-10 minutes | 6 GB |
+| Florence-2-Large | ~1.5 GB | 2-3 minutes | 2 GB |
+
+> **💡 Note:** Models are cached locally. First download takes time, but subsequent loads are instant!
+
+### GPU Requirements
+
+| Model | Minimum GPU | Recommended GPU | CPU Fallback |
+|-------|-------------|-----------------|--------------|
+| **Qwen2-VL** | RTX 2060 (6GB) | RTX 3080 (10GB) | ⚠️ Very Slow |
+| **LLaVA-v1.6** | RTX 2060 (6GB) | RTX 3080 (10GB) | ⚠️ Very Slow |
+| **PaliGemma** | GTX 1660 (6GB) | RTX 3060 (12GB) | ✅ Workable |
+| **Florence-2** | GTX 1650 (4GB) | Any GPU | ✅ Good |
+| **BLIP-2** | RTX 2060 (6GB) | RTX 3070 (8GB) | ⚠️ Slow |
+
+---
+# 🤝 Contributing
 Contributions are welcome! Please see CONTRIBUTING.md for guidelines.
 
-Development Setup
-bash
+# Development Setup
 
 # Clone repo
+
+```bash
 git clone https://github.com/yourusername/data-center-inventory-extractor.git
+cd data-center-inventory-extractor
+```
 
 # Install dev dependencies
+```bash
 pip install -r requirements-dev.txt
+```
 
 # Run tests
+```bash
 pytest tests/
-
+```
 # Format code
+```bash
 black app.py
+```
 
 # Lint
+```bash
 flake8 app.py
-Feature Requests
+```
+
+# Feature Requests
 Open an issue with the label enhancement
 
-Bug Reports
+# Bug Reports
 Open an issue with:
 
 System info (OS, GPU, RAM)
 Steps to reproduce
 Error messages
 Screenshots
-📄 License
+
+# 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-🙏 Acknowledgments
-Models
-Qwen2-VL by Alibaba Cloud (Qwen Team)
-LLaVA by Microsoft & University of Wisconsin-Madison
-PaliGemma by Google
-Florence-2 by Microsoft
-BLIP-2 by Salesforce Research
-Libraries
-Streamlit - Web framework
-Transformers - Model library
-PyTorch - Deep learning framework
-PyMuPDF - PDF processing
-Tesseract - OCR engine
-📞 Support
-Issues: GitHub Issues
-Discussions: GitHub Discussions
+# 🙏 Acknowledgments
+
+# 📞 Support
 Email: julian.garrett@aliniant.com
-🗺️ Roadmap
+
+Under MIT License @ Aliniant Labs 2025
+
+# 🗺️ Roadmap
  Batch PDF processing
  CSV/Excel export
  Database integration
@@ -537,3 +729,5 @@ Email: julian.garrett@aliniant.com
  Web-based annotation tool
  Multi-language support
  Custom model fine-tuning
+ 
+# Made with ❤️ for anyone who find this useful. There's a fair way to go yet!!!
