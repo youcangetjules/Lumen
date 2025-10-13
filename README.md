@@ -138,7 +138,7 @@ Works without GPU but 5-10x slower:
 
 ### 1. Clone the Repository
 
-git clone https://github.com/yourusername/data-center-inventory-extractor.git
+git clone https://github.com/youcangetjules/Lumen.git
 cd data-center-inventory-extractor
 
 2. Create Virtual Environment
