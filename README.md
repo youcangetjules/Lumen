@@ -99,7 +99,7 @@ Equipment: MISC CAB
 Contains: (3) 3A SMSI TRANS
 ...
 
-
+gherkin
 
 
 ---
@@ -528,7 +528,6 @@ Tesseract - OCR engine
 Issues: GitHub Issues
 Discussions: GitHub Discussions
 Email: julian.garrett@aliniant.com
-
 🗺️ Roadmap
  Batch PDF processing
  CSV/Excel export
@@ -538,18 +537,3 @@ Email: julian.garrett@aliniant.com
  Web-based annotation tool
  Multi-language support
  Custom model fine-tuning
-Made with ❤️ for Data Center Engineers
-
-Star ⭐ this repo if you find it useful!
-
-License attributions: MIT License - Aliniant Labs 2025
-
-This expanded README includes:
-- Complete feature matrix
-- Detailed installation steps
-- Comprehensive model comparison
-- Troubleshooting guide
-- Performance optimization tips
-- Contributing guidelines
-- Professional formatting with tables and badges
-
