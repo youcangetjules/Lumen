@@ -134,7 +134,9 @@ Works without GPU but 5-10x slower:
 
 ---
 
-### 🚀 Installation
+# 🚀 Installation
+
+## Pre-requisites
 
 #### 🧩 Streamlit Prerequisite
 
@@ -170,12 +172,15 @@ Streamlit, version 1.32.0
 
 If you see an error like “command not found”, ensure your virtual environment is activated and try reinstalling.
 
+## Install the code
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/youcangetjules/Lumen.git
 ```
 
 ### 2. Create Virtual Environment
+
 #### Windows:
 
 ```bash
