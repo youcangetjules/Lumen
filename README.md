@@ -151,8 +151,9 @@ Python	3.8 or newer
 
 If Streamlit isn’t installed yet, add it using:
 
+```bash
 pip install streamlit>=1.32.0
-
+```
 
 Or, if you’re using a requirements.txt file, verify it includes:
 
@@ -162,8 +163,9 @@ streamlit>=1.32.0
 
 Confirm Streamlit is correctly installed:
 
+```bash
 streamlit --version
-
+```
 
 Expected output:
 
