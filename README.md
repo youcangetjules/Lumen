@@ -134,8 +134,41 @@ Works without GPU but 5-10x slower:
 
 ---
 
-## 🚀 Installation
+### 🚀 Installation
 
+#### 🧩 Streamlit Prerequisite
+
+Before running the app, ensure Streamlit is installed — it’s the framework that powers the user interface.
+
+#### ✅ Minimum Version
+Component	Requirement
+Streamlit	1.32.0 or newer
+Python	3.8 or newer
+
+#### 🧰 Installation
+
+If Streamlit isn’t installed yet, add it using:
+
+pip install streamlit>=1.32.0
+
+
+Or, if you’re using a requirements.txt file, verify it includes:
+
+streamlit>=1.32.0
+
+#### 🧪 Verify Installation
+
+Confirm Streamlit is correctly installed:
+
+streamlit --version
+
+
+Expected output:
+
+Streamlit, version 1.32.0
+
+
+If you see an error like “command not found”, ensure your virtual environment is activated and try reinstalling.
 
 ### 1. Clone the Repository
 ```bash
