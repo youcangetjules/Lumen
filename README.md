@@ -136,23 +136,26 @@ Works without GPU but 5-10x slower:
 
 ## 🚀 Installation
 
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/youcangetjules/Lumen.git
-
-cd data-center-inventory-extractor
 ```
 
 ### 2. Create Virtual Environment
 #### Windows:
 
 ```bash
+mkdir data-center-inventory-extractor
+cd data-center-inventory-extractor
 python -m venv venv
 venv\Scripts\activate
 ```
 
 #### Linux/macOS:
 ```bash
+mkdir data-center-inventory-extractor
+cd data-center-inventory-extractor
 python3 -m venv venv
 source venv/bin/activate
 ```
